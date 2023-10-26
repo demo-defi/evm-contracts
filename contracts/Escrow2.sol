@@ -27,11 +27,13 @@ contract Escrow2 {
     function exchange(address myToken, address counterPart, address anotherToken, uint amount) external {
         require(deposits[myToken][msg.sender] > 0, "zero deposit");
         require(deposits[myToken][msg.sender] >= amount, "deposit less than amount");
-        require(rates[myToken][anotherToken] > 0, "rate for pair with anotherToken not specified");
-        require(rates[myToken][anotherToken] == rates[anotherToken][myToken], "rates are not equal");
+//        require(rates[myToken][anotherToken] > 0, "rate for pair with anotherToken not specified");
+//        require(rates[myToken][anotherToken] == rates[anotherToken][myToken], "rates are not equal");
 
-        uint anotherAmount = amount * rates[myToken][anotherToken];
+        uint rate = 1; //rates[myToken][anotherToken]
+        uint anotherAmount = amount * rate;
         deposits[myToken][msg.sender] -= amount;
         IERC20(myToken).transfer(counterPart, amount);
+        IERC20(anotherToken).transfer(msg.sender, anotherAmount);
     }
 }
